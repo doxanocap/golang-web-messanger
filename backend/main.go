@@ -18,14 +18,13 @@ const (
 	port     = 5432
 	user     = "postgres"
 	password = "eldoseldos"
-	dbname   = "grindset"
+	dbname   = "webchat"
 )
 
-type Users struct {
-	Id       int
+type chatHistory struct {
+	time     string
 	Username string
-	Email    string
-	Password string
+	message  string
 }
 
 func setupRoutes() {
@@ -48,31 +47,11 @@ func reader(conn *websocket.Conn) {
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
-
 	if err != nil {
 		panic(err)
-	}
-
-	defer func(db *sql.DB) {
-		_ = db.Close()
-	}(db)
-
-	res, err := db.Query("SELECT * FROM users")
-	if err != nil {
-		panic(err)
-	}
-
-	for res.Next() {
-		var user Users
-		err := res.Scan(&user.Id, &user.Username, &user.Email, &user.Password)
-		fmt.Println(user.Id)	
-		if err != nil {
-			panic(err)
-		}
 	}
 
 	for {
-		// reading messages
 		msgType, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
@@ -83,11 +62,21 @@ func reader(conn *websocket.Conn) {
 		if err != nil {
 			panic(err)
 		}
-		_, _ = file.WriteString(fmt.Sprint(time.Now().Format("2006-01-02 15:04:05"), " | message:", string(msg), "\n"))
-		fmt.Println(time.Now().Format("15:04:05"), "message --->", string(msg))
 
+		insert, err := db.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("2006-01-02 15:04:05")), "admin", string(msg)))
+		fmt.Println(string(time.Now().Format("2006-01-02 15:04:05")), "admin", string(msg))
+		if err != nil {
+			panic(err)
+		}
+		defer insert.Close()
+
+		_, _ = file.WriteString(fmt.Sprint(time.Now().Format("2006-01-02 15:04:05"), " | message:", string(msg), "\n"))
+		//fmt.Println(time.Now().Format("15:04:05"), "message --->", string(msg))
 		if err := conn.WriteMessage(msgType, msg); err != nil {
 			log.Println(err)
+			defer func(db *sql.DB) {
+				_ = db.Close()
+			}(db)
 			return
 		}
 
