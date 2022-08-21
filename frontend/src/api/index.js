@@ -4,6 +4,10 @@ var socket = new WebSocket("ws://localhost:8080/ws");
 let connect = cb => {
   console.log("connecting");
 
+  socket.addEventListener('message', (event) => {
+    console.log('Message from server ', event.data);
+  });
+
   socket.onopen = () => {
     console.log("Successfully Connected");
   };

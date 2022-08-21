@@ -1,0 +1,15 @@
+res, err := db.Query("SELECT * FROM messages")
+errorChecker(err)
+
+currentChatHistory = []chatHistory{}
+
+for res.Next() {
+	var current chatHistory
+	err = res.Scan(&current.Time, &current.Username, &current.Message)
+	errorChecker(err)
+	currentChatHistory = append(currentChatHistory, current)
+}
+
+data, _ := json.MarshalIndent(currentChatHistory, "", "\t")
+fmt.Println(string(data))
+s

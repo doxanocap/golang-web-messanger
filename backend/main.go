@@ -1,15 +1,13 @@
 package main
 
 import (
-	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"time"
 
+	"github.com/doxanocap/golang-react/backend/pkg/websocket"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 )
 
@@ -22,9 +20,9 @@ const (
 )
 
 type chatHistory struct {
-	time     string
-	Username string
-	message  string
+	Time     string `json: "time"`
+	Username string `json: "username"`
+	Message  string `json: "message"`
 }
 
 func setupRoutes() {
@@ -33,66 +31,42 @@ func setupRoutes() {
 		fmt.Fprintf(ctx.Writer, "Simple server")
 	})
 	r.GET("/ws", serveWs)
+	r.GET("/sendChatToFront", sendChatToFront)
 	r.Run(":8080")
 }
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin:     func(r *http.Request) bool { return true },
-}
+var currentChatHistory = []chatHistory{}
 
-func reader(conn *websocket.Conn) {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-
-	for {
-		msgType, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		file, err := os.OpenFile("messages.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
-
-		if err != nil {
-			panic(err)
-		}
-
-		insert, err := db.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("2006-01-02 15:04:05")), "admin", string(msg)))
-		fmt.Println(string(time.Now().Format("2006-01-02 15:04:05")), "admin", string(msg))
-		if err != nil {
-			panic(err)
-		}
-		defer insert.Close()
-
-		_, _ = file.WriteString(fmt.Sprint(time.Now().Format("2006-01-02 15:04:05"), " | message:", string(msg), "\n"))
-		//fmt.Println(time.Now().Format("15:04:05"), "message --->", string(msg))
-		if err := conn.WriteMessage(msgType, msg); err != nil {
-			log.Println(err)
-			defer func(db *sql.DB) {
-				_ = db.Close()
-			}(db)
-			return
-		}
-
-	}
-}
-
-func serveWs(ctx *gin.Context) {
-	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
+	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
-		return
+		return ws, err
 	}
+	return ws, nil
+}
 
-	reader(ws)
+func sendChatToFront(ctx *gin.Context) {
+	data, _ := json.MarshalIndent(currentChatHistory, "", "\t")
+	ctx.JSON(http.StatusOK, string(data))
+	fmt.Println(string(data))
+}
+
+func serveWs(w http.ResponseWriter, r *http.Request) {
+	ws, err := websocket.Upgrade(w, r)
+	if err != nil {
+		fmt.Fprintf(w, "%+V\n", err)
+	}
+	go websocket.Writer(ws)
+	websocket.Reader(ws)
 }
 
 func main() {
 	setupRoutes()
+}
+
+func errorChecker(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
