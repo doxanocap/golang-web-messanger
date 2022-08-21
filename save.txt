@@ -12,4 +12,12 @@ for res.Next() {
 
 data, _ := json.MarshalIndent(currentChatHistory, "", "\t")
 fmt.Println(string(data))
-s
+
+
+
+
+func sendChatToFront(ctx *gin.Context) {
+	data, _ := json.MarshalIndent(currentChatHistory, "", "\t")
+	ctx.JSON(http.StatusOK, string(data))
+	fmt.Println(string(data))
+}
