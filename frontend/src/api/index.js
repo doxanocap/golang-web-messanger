@@ -1,9 +1,8 @@
 // api/index.js
 var socket = new WebSocket("ws://localhost:8080/ws");
 
-let connect = cb => {
+const connect = (cb) => {
   console.log("connecting");
-
   socket.addEventListener('message', (event) => {
     console.log('Message from server ', event.data);
   });
@@ -26,7 +25,7 @@ let connect = cb => {
   };
 };
 
-let sendMsg = msg => {
+const sendMsg = (msg) => {
   console.log("sending msg: ", msg);
   socket.send(msg);
 };

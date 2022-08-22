@@ -11,6 +11,7 @@ import (
 func setupRoutes() {
 	r := gin.Default()
 	r.GET("/ws", serveWs)
+	r.GET("/12", websocket.Sender)
 	r.Run(":8080")
 }
 
