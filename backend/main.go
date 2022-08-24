@@ -10,27 +10,33 @@ import (
 
 func setupRoutes() {
 	r := gin.Default()
-	r.GET("/ws", serveWs)
-	r.GET("/12", websocket.Sender)
+	pool := websocket.NewPool()
+
+	go pool.Start()
+
+	r.GET("/put", websocket.Sender)
+	r.GET("/ws", func(ctx *gin.Context) {
+		serveWs(pool, ctx)
+	})
 	r.Run(":8080")
 }
 
-func serveWs(ctx *gin.Context) {
-	ws, err := websocket.Upgrade(ctx.Writer, ctx.Request)
+func serveWs(pool *websocket.Pool, ctx *gin.Context) {
+	fmt.Println("WebSocket Endpoint Hit")
+	websocket.EnableCors(ctx)
+	conn, err := websocket.Upgrade(ctx.Writer, ctx.Request)
 	if err != nil {
 		fmt.Fprintf(ctx.Writer, "%+V\n", err)
 	}
-	go websocket.Writer(ws)
-	websocket.Reader(ws)
+	client := &websocket.Client{
+		Conn: conn,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
 }
 
 func main() {
-	fmt.Println("Start:")
 	setupRoutes()
-}
-
-func errorChecker(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

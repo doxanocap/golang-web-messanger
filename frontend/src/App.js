@@ -1,34 +1,47 @@
-// App.js
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import "./App.css";
 import { connect, sendMsg } from "./api";
 import Header from './components/Header/Header';
 import ChatHistory from './components/ChatHistory/ChatHistory';
 
-const App1 = () => {
-  const [inputMsg, setInputMsg] = useState("");
+const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
-  //setChatHistory(arr)
-
-  const handleMsg = (event) => {
-    setInputMsg(event.target.value)
+  const [input, setInput] = useState("");
+  
+  const handleInput = (event) => {
+    setInput(event.target.value)
   }
 
-  const addMessage = (msg) => {
-    sendMsg(inputMsg)
-    setChatHistory(chatHistory => [...chatHistory, inputMsg])
-    setInputMsg("")
+  const sendMessage = () => {
+    sendMsg(input)
+    var currentTime = new Date().toLocaleString();
+    setChatHistory(chatHistory => [...chatHistory, {Time: currentTime, Username: "Doxa", Message: input}])
+    setInput("")
     document.getElementById("mainInput").value = "";
   }
+
+
+  async function ParsingChatHistory() {
+    const response = await fetch("http://localhost:8080/put");
+    const data = await response.json();
+    const myArrStr = JSON.parse(data);
+    setChatHistory(myArrStr)
+  }
+
+  useEffect(() => {
+    ParsingChatHistory()
+  }, [])
 
   return (
     <div className="App-header">
       <Header />
       <ChatHistory chatHistoryMessages={chatHistory} />
-      <input id="mainInput" onChange={(e) => {handleMsg(e)}}></input>
-      <button onClick={addMessage}>Hit</button>
+      <div className="ChatInput">
+        <input id="mainInput" onChange={(e) => {handleInput(e)}} />
+        <button onClick={() => {sendMessage()}}>Send</button>
+      </div>
     </div>
   );
 }
 
-export default App1;
+export default App;
