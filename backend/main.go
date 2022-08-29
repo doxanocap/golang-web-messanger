@@ -12,12 +12,13 @@ func setupRoutes() {
 	r := gin.Default()
 	pool := websocket.NewPool()
 
-	go pool.Start()
+	go websocket.Start(pool)
 
 	r.GET("/put", websocket.Sender)
 	r.GET("/ws", func(ctx *gin.Context) {
 		serveWs(pool, ctx)
 	})
+
 	r.Run(":8080")
 }
 

@@ -19,13 +19,14 @@ const (
 	dbname   = "webchat"
 )
 
-type chatHistory struct {
-	Time     string
-	Username string
-	Message  string
+type ChatHistory struct {
+	Time     string `json: "time"`
+	Username string `json: "username"`
+	Message  string `json: "message"`
+	Type     int    `json: "type"`
 }
 
-var currentChatHistory = []chatHistory{}
+var currentChatHistory = []ChatHistory{}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -60,9 +61,9 @@ func Sender(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	currentChatHistory = []chatHistory{}
+	currentChatHistory = []ChatHistory{}
 	for res.Next() {
-		var current chatHistory
+		var current ChatHistory
 		err = res.Scan(&current.Time, &current.Username, &current.Message)
 		if err != nil {
 			panic(err)

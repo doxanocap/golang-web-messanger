@@ -1,32 +1,23 @@
 package main
 
 import (
-	"net/http"
-	"os"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"fmt"
 )
 
 func main() {
+	fmt.Println(reachableNodes(7, [][]int{{0, 1}, {1, 2}, {3, 1}, {4, 0}, {0, 5}, {5, 6}}, []int{4, 5}))
+}
 
-	e := echo.New()
-
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, "Hello, Docker! <3")
-	})
-
-	e.GET("/ping", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	httpPort := os.Getenv("HTTP_PORT")
-	if httpPort == "" {
-		httpPort = "8080"
-	}
-
-	e.Logger.Fatal(e.Start(":" + httpPort))
+func validPartition(nums []int) bool {
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] == nums[i+1] {
+            return true
+        }
+        if i < len(nums)-2 {
+            if (nums[i] == nums[i+1] && nums[i] ==nums[i+2]) || ( nums[i] + 1 == nums[i+1] && nums[i] + 2 == nums[i+2]) {
+                return true
+            }
+        } 
+    }
+    return false
 }

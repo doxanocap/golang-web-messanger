@@ -3,6 +3,7 @@ package websocket
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -11,11 +12,6 @@ type Client struct {
 	ID   string
 	Conn *websocket.Conn
 	Pool *Pool
-}
-
-type Message struct {
-	Type int    `json:"type"`
-	Body string `json:"body"`
 }
 
 func (c *Client) Read() {
@@ -30,8 +26,14 @@ func (c *Client) Read() {
 			log.Println(err)
 			return
 		}
-		message := Message{Type: messageType, Body: string(p)}
+		message := ChatHistory{Type: messageType, Time: string(time.Now().Format("02.01.2006, 15:04:05")), Username: "Doxa", Message: string(p)}
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)
 	}
 }
+
+// if err := c.Conn.WriteMessage(websocket.TextMessage, []byte("qwe")); err != nil {
+// 	fmt.Println("Can't send")
+// } else {
+// 	fmt.Println("Sent message")
+// }
