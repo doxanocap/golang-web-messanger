@@ -1,11 +1,12 @@
 import React, { Component, useState, useEffect } from "react";
-import "./App.css";
-import Header from './components/Header/Header';
-import ChatHistory from './components/ChatHistory/ChatHistory';
+import SingleChatHeader from '../singleChatHeader/index';
+import SingleChatHistory from '../singleChatHistory/index';
+import "./index.css";
+
 const socket = new WebSocket('ws://localhost:8080/ws');
 
 
-const App = () => {
+const SingleChatContainer = () => {
   const [chatHistory, setChatHistory] = useState("");
   const [input, setInput] = useState("");
   socket.onmessage = (msg) => {
@@ -44,9 +45,9 @@ const App = () => {
   } 
 
   return (
-    <div className="App-header">
-      <Header />
-      <ChatHistory chatHistoryMessages={chatHistory} /> 
+    <div className="SingleChatContainer-header">
+      <SingleChatHeader />
+      <SingleChatHistory chatHistoryMessages={chatHistory} /> 
       <div className="ChatInput">
         <input id="mainInput" onChange={(e) => {handleInput(e)}} onKeyDown={(e) => { if (e.key === 'Enter') { sendMessage(e) }}}/>
         <button onClick={() => {sendMessage(input)}}>Send</button>
@@ -55,4 +56,4 @@ const App = () => {
   );
 }
 
-export default App;
+export {SingleChatContainer};

@@ -1,0 +1,21 @@
+.MainPageContainer {
+    text-align: center;
+  }
+  
+  .MainPageContainer-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: rgb(34, 27, 27);
+  }
+  .MainPageContainer-header h2 {
+    color: #f7f7f7;
+    
+    padding: 20px;
+    margin: 0;
+    padding: 0;
+  }

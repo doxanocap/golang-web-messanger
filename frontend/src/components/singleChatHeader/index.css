@@ -1,4 +1,4 @@
-.header {
+.SingleChatHeader {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,7 +8,7 @@
   padding: 10px;
   color: white;
 }
-.header h2 {
+.SingleChatHeader h2 {
   margin: 0;
   padding: 0;
 }
