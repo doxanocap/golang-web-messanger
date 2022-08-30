@@ -5,6 +5,7 @@ import (
 
 	"github.com/doxanocap/golang-react/backend/pkg/controllers"
 	"github.com/doxanocap/golang-react/backend/pkg/websocket"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +20,13 @@ func SetupRoutes() {
 		serveWs(pool, ctx)
 	})
 	r.GET("/api/register", controllers.Register)
+	r.GET("/api/user", controllers.User)
+	r.GET("/api/login", controllers.Login)
 	r.Run(":8080")
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowCredentials: true,
+	}))
 
 }
 

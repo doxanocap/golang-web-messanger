@@ -5,19 +5,18 @@ import (
 	"time"
 
 	"github.com/doxanocap/golang-react/backend/pkg/database"
-	"github.com/doxanocap/golang-react/backend/pkg/models"
 )
 
-func NewPool() *models.Pool {
-	return &models.Pool{
-		Register:   make(chan *models.Client),
-		Unregister: make(chan *models.Client),
-		Clients:    make(map[*models.Client]bool),
-		Broadcast:  make(chan models.ChatHistory),
+func NewPool() *Pool {
+	return &Pool{
+		Register:   make(chan *Client),
+		Unregister: make(chan *Client),
+		Clients:    make(map[*Client]bool),
+		Broadcast:  make(chan ChatHistory),
 	}
 }
 
-func Start(pool *models.Pool) {
+func Start(pool *Pool) {
 	for {
 		select {
 		case client := <-pool.Register:

@@ -11,13 +11,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type ChatHistory struct {
-	Time     string `json:"time"`
-	Username string `json:"username"`
-	Message  string `json:"message"`
-	Type     int    `json:"type"`
-}
-
 var currentChatHistory []ChatHistory
 
 var upgrader = websocket.Upgrader{
@@ -41,7 +34,6 @@ func EnableCors(ctx *gin.Context) {
 
 func Sender(ctx *gin.Context) {
 	EnableCors(ctx)
-
 	res, err := database.DB.Query("SELECT * FROM messages")
 	if err != nil {
 		panic(err)

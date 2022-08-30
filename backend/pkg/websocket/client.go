@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"log"
 	"time"
-
-	"github.com/doxanocap/golang-react/backend/pkg/models"
 )
 
-func (c *models.Client) Read() {
+func (c *Client) Read() {
 	defer func() {
 		c.Pool.Unregister <- c
 		c.Conn.Close()
@@ -20,7 +18,7 @@ func (c *models.Client) Read() {
 			log.Println(err)
 			return
 		}
-		message := models.ChatHistory{Type: messageType, Time: string(time.Now().Format("02.01.2006, 15:04:05")), Username: "Doxa", Message: string(p)}
+		message := ChatHistory{Type: messageType, Time: string(time.Now().Format("02.01.2006, 15:04:05")), Username: "Doxa", Message: string(p)}
 		c.Pool.Broadcast <- message
 		fmt.Printf("Message Received: %+v\n", message)
 	}
