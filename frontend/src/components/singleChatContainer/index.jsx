@@ -3,7 +3,7 @@ import SingleChatHeader from '../singleChatHeader/index';
 import SingleChatHistory from '../singleChatHistory/index';
 import "./index.css";
 
-const socket = new WebSocket('ws://localhost:8080/ws');
+const socket = new WebSocket('ws://localhost:8080/api/websocket');
 
 
 const SingleChatContainer = () => {
@@ -11,7 +11,7 @@ const SingleChatContainer = () => {
   const [input, setInput] = useState("");
   socket.onmessage = (msg) => {
     var currentTime = new Date().toLocaleString();
-    setChatHistory(chatHistory => [...chatHistory, {Time: currentTime, Username: JSON.parse(msg.data).Username, Message: JSON.parse(msg.data).Message}])
+    setChatHistory(chatHistory => [...chatHistory, {time: currentTime, username: JSON.parse(msg.data).username, message: JSON.parse(msg.data).message}])
   }
 
   socket.onopen = () => {
@@ -38,16 +38,15 @@ const SingleChatContainer = () => {
   }
 
   async function ParsingChatHistory() {
-    const response = await fetch("http://localhost:8080/put");
+    const response = await fetch("http://localhost:8080/api/fetch");
     const data = await response.json();
     const myArrStr = JSON.parse(data);
     setChatHistory(myArrStr)
   } 
-
   return (
     <div className="SingleChatContainer-header">
       <SingleChatHeader />
-      <SingleChatHistory chatHistoryMessages={chatHistory} /> 
+      <SingleChatHistory ChatHistoryMessages={chatHistory} /> 
       <div className="ChatInput">
         <input id="mainInput" onChange={(e) => {handleInput(e)}} onKeyDown={(e) => { if (e.key === 'Enter') { sendMessage(e) }}}/>
         <button onClick={() => {sendMessage(input)}}>Send</button>

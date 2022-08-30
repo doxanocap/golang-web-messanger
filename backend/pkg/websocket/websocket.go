@@ -1,42 +1,30 @@
 package websocket
 
 import (
-	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/doxanocap/golang-react/backend/pkg/database"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "eldoseldos"
-	dbname   = "webchat"
-)
-
 type ChatHistory struct {
-	Time     string `json: "time"`
-	Username string `json: "username"`
-	Message  string `json: "message"`
-	Type     int    `json: "type"`
+	Time     string `json:"time"`
+	Username string `json:"username"`
+	Message  string `json:"message"`
+	Type     int    `json:"type"`
 }
 
-var currentChatHistory = []ChatHistory{}
+var currentChatHistory []ChatHistory
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
-
-var psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+
-	"password=%s dbname=%s sslmode=disable",
-	host, port, user, password, dbname)
 
 func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -53,14 +41,12 @@ func EnableCors(ctx *gin.Context) {
 
 func Sender(ctx *gin.Context) {
 	EnableCors(ctx)
-	db, err := sql.Open("postgres", psqlInfo)
+
+	res, err := database.DB.Query("SELECT * FROM messages")
 	if err != nil {
 		panic(err)
 	}
-	res, err := db.Query("SELECT * FROM messages")
-	if err != nil {
-		panic(err)
-	}
+
 	currentChatHistory = []ChatHistory{}
 	for res.Next() {
 		var current ChatHistory

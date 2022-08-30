@@ -1,23 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func main() {
-	fmt.Println(reachableNodes(7, [][]int{{0, 1}, {1, 2}, {3, 1}, {4, 0}, {0, 5}, {5, 6}}, []int{4, 5}))
-}
+	router := gin.Default()
 
-func validPartition(nums []int) bool {
-    for i := 0; i < len(nums)-1; i++ {
-        if nums[i] == nums[i+1] {
-            return true
-        }
-        if i < len(nums)-2 {
-            if (nums[i] == nums[i+1] && nums[i] ==nums[i+2]) || ( nums[i] + 1 == nums[i+1] && nums[i] + 2 == nums[i+2]) {
-                return true
-            }
-        } 
-    }
-    return false
+	// Query string parameters are parsed using the existing underlying request object.
+	// The request responds to a url matching:  /welcome?firstname=Jane&lastname=Doe
+	router.GET("/welcome", func(c *gin.Context) {
+		var data map[string]string
+		if err := c.BindJSON(&data); err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK, data)
+	})
+	router.Run(":8080")
 }

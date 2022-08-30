@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 
-const SingleChatHistory = ({chatHistoryMessages}) => {
-  if (typeof(chatHistoryMessages) !== "object") {
-    return null
-  } 
-  return (
+const SingleChatHistory = ({ChatHistoryMessages}) => {
+  if (typeof(ChatHistoryMessages) === "object") {
+    return (
       <div className="SingleChatHistory">
         <h2>Chat History</h2>
-        {chatHistoryMessages.map((item, i) => (
-          <p key={item.Time}>{item.Username} : {item.Message}</p>
+        {ChatHistoryMessages.map((item, i) => (
+          <p key={item.message + item.time}>{}{item.username} : {item.message}</p>
         ))}
       </div>
     );
+  }
 }
 
 export default SingleChatHistory; 

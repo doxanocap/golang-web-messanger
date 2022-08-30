@@ -1,32 +1,23 @@
 package websocket
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
+
+	"github.com/doxanocap/golang-react/backend/pkg/database"
+	"github.com/doxanocap/golang-react/backend/pkg/models"
 )
 
-type Pool struct {
-	Register   chan *Client
-	Unregister chan *Client
-	Clients    map[*Client]bool
-	Broadcast  chan ChatHistory
-}
-
-func NewPool() *Pool {
-	return &Pool{
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Clients:    make(map[*Client]bool),
-		Broadcast:  make(chan ChatHistory),
+func NewPool() *models.Pool {
+	return &models.Pool{
+		Register:   make(chan *models.Client),
+		Unregister: make(chan *models.Client),
+		Clients:    make(map[*models.Client]bool),
+		Broadcast:  make(chan models.ChatHistory),
 	}
 }
 
-func Start(pool *Pool) {
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+func Start(pool *models.Pool) {
 	for {
 		select {
 		case client := <-pool.Register:
@@ -47,12 +38,10 @@ func Start(pool *Pool) {
 
 			fmt.Println("Sending message to all clients in Pool")
 			fmt.Println(message.Message)
-			insert, err := db.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("02.01.2006, 15:04:05")), "Doxa", string(message.Message)))
+			_, err := database.DB.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("02.01.2006, 15:04:05")), "Doxa", string(message.Message)))
 			if err != nil {
 				fmt.Println(err)
 			}
-
-			defer insert.Close()
 			for client := range pool.Clients {
 				fmt.Println(client)
 				if err := client.Conn.WriteJSON(message); err != nil {
