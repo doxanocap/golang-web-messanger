@@ -2,42 +2,34 @@ package websocket
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/doxanocap/golang-react/backend/pkg/database"
+	"github.com/doxanocap/golang-react/backend/pkg/models"
+	"time"
 )
 
-func NewPool() *Pool {
-	return &Pool{
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Clients:    make(map[*Client]bool),
-		Broadcast:  make(chan ChatHistory),
-	}
-}
-
-func Start(pool *Pool) {
+func Start(pool *models.Pool) {
 	for {
 		select {
 		case client := <-pool.Register:
-			pool.Clients[client] = true
-			fmt.Println("Size of Connection Pool: ", len(pool.Clients))
-			for client := range pool.Clients {
-				fmt.Println(client)
-				//client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
+			currUser := ShowCurrentUser(client)
+			res, _ := database.DB.Query(fmt.Sprintf("SELECT * FROM onlineUsers WHERE id = '%d'", currUser.Id))
+			i := 0
+			for res.Next() {
+				i++
+				break
 			}
+			if i == 0 {
+				database.DB.Query(fmt.Sprintf("INSERT INTO onlineUsers (id, username, email) VALUES('%d','%s','%s')", currUser.Id, currUser.Username, currUser.Email))
+			}
+			pool.Clients[client] = true
 		case client := <-pool.Unregister:
 			delete(pool.Clients, client)
-			fmt.Println("Size of Connection Pool: ", len(pool.Clients))
-			for client := range pool.Clients {
-				fmt.Println(client)
-				//	client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected..."})
-			}
+			currUser := ShowCurrentUser(client)
+			database.DB.Query(fmt.Sprintf("DELETE FROM onlineUsers WHERE id = '%d'", currUser.Id))
 		case message := <-pool.Broadcast:
-
 			fmt.Println("Sending message to all clients in Pool")
 			fmt.Println(message.Message)
-			_, err := database.DB.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("02.01.2006, 15:04:05")), "Doxa", string(message.Message)))
+			_, err := database.DB.Query(fmt.Sprintf("INSERT INTO messages (time, username, message) VALUES('%s','%s','%s')", string(time.Now().Format("02.01.2006, 15:04:05")), string(message.Username), string(message.Message)))
 			if err != nil {
 				fmt.Println(err)
 			}

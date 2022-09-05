@@ -1,0 +1,69 @@
+.RegistrationPageContainer {
+  background-color: #f8f9fa;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+  
+.RegistrationPageContainer form {
+  margin-top: 40px;
+  height: 500px;
+  width: 330px;
+  display: block;
+  background-color: #f8f9fa;
+  text-align: center;
+  flex-direction: column;
+}
+
+.RegistrationPageContainer-input1 {
+  text-decoration: none solid rgb(33, 37, 41);
+  border: solid #ced4da 1px;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  margin: 0 0 -1px 0;
+  width: 280px;
+  height: 50px;
+  text-align: center;
+}
+
+.RegistrationPageContainer-input2 {
+  text-decoration: none solid rgb(33, 37, 41);
+  border: solid #ced4da 1px;
+  margin: 0 0 -1px 0;
+  width: 280px;
+  height: 50px;
+  text-align: center;
+}
+
+.RegistrationPageContainer-input3 {
+  text-decoration: none solid rgb(33, 37, 41);
+  border: solid #ced4da 1px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  margin: 0 0 -1px 0;
+  width: 280px;
+  height: 50px;
+  text-align: center;
+}
+
+.RegistrationPageContainer button {
+  margin-top: 20px;
+  width: 279px;
+  height: 50px;
+  border: solid 1px black;
+  border-radius: 8px;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none solid white;
+  background-color: #0d6efd;
+  font-size: 25px;
+  color: white;
+}
+
+
+.RegistrationPageContainer h1 {
+  margin-top: 100px;
+  margin-bottom: 15px;
+  font-size: 35px;
+}

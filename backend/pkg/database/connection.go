@@ -1,9 +1,8 @@
 package database
 
 import (
-	"fmt"
-
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
 )
 

@@ -1,21 +1,72 @@
 .MainPageContainer {
-    text-align: center;
-  }
-  
-  .MainPageContainer-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: rgb(34, 27, 27);
-  }
-  .MainPageContainer-header h2 {
-    color: #f7f7f7;
-    
-    padding: 20px;
-    margin: 0;
-    padding: 0;
-  }
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: white;
+  color: rgb(34, 27, 27);
+}  
+
+.MainPageContainer-upperLarge {
+  margin-top: 120px;
+  margin-bottom: 20px;
+  width: 94vw;
+  height: 326px;
+  background-color: #f8f9fa;
+  border: #212529 solid 3px;
+}
+
+.MainPageContainer-parentOfSmall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MainPageContainer-upperLarge-h1 {
+  margin-left: 50px;
+  text-align: left;
+  color: #212529;
+  font-size: 40px;
+}
+
+.MainPageContainer-upperLarge-p {
+  margin: 50px;
+  text-align: left;
+  color: #212529;
+  font-size: 25px;
+}
+
+.MainPageContainer-bottomDark {
+  margin: 20px 0 0 0;
+  padding: 0;
+  width: 47vw;
+  height: 350px;
+  background-color: #424245;
+  border: #424245 solid 3px;
+}
+
+.MainPageContainer-bottomLight {
+  margin: 20px 0 0 0;
+  padding: 0;
+  width: 47vw;
+  height: 350px;
+  background-color: #f8f9fa;
+  border: #f8f9fa solid 3px;
+}
+
+.MainPageContainer-bottomDark-p {
+  margin: 20px;
+  text-align: left;
+  font-size: 21px;
+  color: white;
+}
+
+.MainPageContainer-bottomLight-p {
+  margin: 20px;
+  text-align: left;
+  font-size: 21px;
+  color: black;
+}

@@ -1,9 +1,9 @@
-import {SingleChatContainer} from '../components/singleChatContainer/index';
+import SingleChatContainer from '../components/singleChatContainer/index';
 
-const Webchat = () => {
+const Webchat = ({Username}) => {
     return (
-        <SingleChatContainer />
+        <SingleChatContainer Username={Username} />
     )
 }
 
-export {Webchat};
+export default Webchat;

@@ -84,11 +84,8 @@ func Login(ctx *gin.Context) {
 }
 
 func User(ctx *gin.Context) {
-	cookie, err := ctx.Cookie("jwt")
+	cookie, _ := ctx.Cookie("jwt")
 
-	if err != nil {
-		panic(err)
-	}
 	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SecretKey), nil
 	})
@@ -107,9 +104,20 @@ func User(ctx *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
+		break
 	}
-
 	ctx.JSON(http.StatusOK, user)
+}
+
+func Logout(ctx *gin.Context) {
+	cookie := &http.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+	}
+	http.SetCookie(ctx.Writer, cookie)
+	ctx.JSON(http.StatusOK, gin.H{"message": "deleted cookie"})
 }
 
 func generateToken(ln int) string {
@@ -118,12 +126,13 @@ func generateToken(ln int) string {
 	for i := 0; i < ln; i++ {
 		n := rand.Intn(62)
 		if n < 10 {
-			token += string(rune(48 + n))
+			n += 48
 		} else if n < 36 {
-			token += string(rune(55 + n))
+			n += 55
 		} else {
-			token += string(rune(61 + n))
+			n += 61
 		}
+		token += string(rune(n))
 	}
 	return token
 }

@@ -2,16 +2,15 @@ package websocket
 
 import (
 	"encoding/json"
-	"log"
-	"net/http"
-
 	"github.com/doxanocap/golang-react/backend/pkg/database"
-
+	"github.com/doxanocap/golang-react/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
+	"net/http"
 )
 
-var currentChatHistory []ChatHistory
+var currentChatHistory []models.ChatHistory
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -19,8 +18,8 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+func Upgrade(ctx *gin.Context, r *http.Request) (*websocket.Conn, error) {
+	conn, err := upgrader.Upgrade(ctx.Writer, r, nil)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -28,20 +27,15 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	return conn, nil
 }
 
-func EnableCors(ctx *gin.Context) {
-	(ctx.Writer).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
 func Sender(ctx *gin.Context) {
-	EnableCors(ctx)
 	res, err := database.DB.Query("SELECT * FROM messages")
 	if err != nil {
 		panic(err)
 	}
 
-	currentChatHistory = []ChatHistory{}
+	currentChatHistory = []models.ChatHistory{}
 	for res.Next() {
-		var current ChatHistory
+		var current models.ChatHistory
 		err = res.Scan(&current.Time, &current.Username, &current.Message)
 		if err != nil {
 			panic(err)
@@ -50,4 +44,40 @@ func Sender(ctx *gin.Context) {
 	}
 	data, _ := json.MarshalIndent(currentChatHistory, "", "\t")
 	ctx.JSON(http.StatusOK, string(data))
+}
+
+func ListofUsers(ctx *gin.Context) {
+	res, err := database.DB.Query("SELECT * FROM users")
+	if err != nil {
+		panic(err)
+	}
+	var data []models.User
+	for res.Next() {
+		var Current models.User
+		err = res.Scan(&Current.Id, &Current.Token, &Current.Username, &Current.Email, &Current.Password)
+		if err != nil {
+			panic(err)
+		}
+		data = append(data, Current)
+	}
+	dataJSON, _ := json.MarshalIndent(data, "", "\t")
+	ctx.JSON(http.StatusOK, string(dataJSON))
+}
+
+func ListofOnlineUsers(ctx *gin.Context) {
+	res, err := database.DB.Query("SELECT * FROM onlineUsers")
+	if err != nil {
+		panic(err)
+	}
+	var data []models.User
+	for res.Next() {
+		var Current models.User
+		err = res.Scan(&Current.Id, &Current.Username, &Current.Email)
+		if err != nil {
+			panic(err)
+		}
+		data = append(data, Current)
+	}
+	dataJSON, _ := json.MarshalIndent(data, "", "\t")
+	ctx.JSON(http.StatusOK, string(dataJSON))
 }

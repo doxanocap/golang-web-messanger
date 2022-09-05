@@ -1,12 +1,12 @@
 package websocket
 
 import (
-	"fmt"
+	"github.com/doxanocap/golang-react/backend/pkg/models"
 	"log"
 	"time"
 )
 
-func (c *Client) Read() {
+func Read(c *models.Client) {
 	defer func() {
 		c.Pool.Unregister <- c
 		c.Conn.Close()
@@ -18,14 +18,8 @@ func (c *Client) Read() {
 			log.Println(err)
 			return
 		}
-		message := ChatHistory{Type: messageType, Time: string(time.Now().Format("02.01.2006, 15:04:05")), Username: "Doxa", Message: string(p)}
+		user := ShowCurrentUser(c)
+		message := models.ChatHistory{Type: messageType, Time: string(time.Now().Format("02.01.2006, 15:04:05")), Username: user.Username, Message: string(p)}
 		c.Pool.Broadcast <- message
-		fmt.Printf("Message Received: %+v\n", message)
 	}
 }
-
-// if err := c.Conn.WriteMessage(websocket.TextMessage, []byte("qwe")); err != nil {
-// 	fmt.Println("Can't send")
-// } else {
-// 	fmt.Println("Sent message")
-// }

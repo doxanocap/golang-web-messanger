@@ -1,9 +1,9 @@
-import {MainPageContainer} from '../components/mainPageContainer/index';
+import MainPageContainer from '../components/mainPageContainer/index';
 
-const MainPage = () => {
+const MainPage = ({CurrentUsersName}) => {
     return (
-        <MainPageContainer />
+        <MainPageContainer CurrentUsersName={CurrentUsersName} />
     )
 }
 
-export {MainPage};
+export default MainPage;

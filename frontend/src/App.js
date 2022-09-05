@@ -1,18 +1,38 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { MainPage } from './pages/mainpage';
-import {Webchat} from './pages/webchat';
-import {SingUp} from './pages/signup';
+import {BrowserRouter, Route, Routes } from 'react-router-dom';
+import {React, useState, useEffect} from "react";
+import Register from './pages/register';
+import MainPage from './pages/mainpage';
+import Webchat from './pages/webchat';
+import Login from './pages/login';
+import PagesHeader from  './components/pagesHeader'
 
 const App = () => {
-  return (
-    <BrowserRouter> 
-      <Routes>
-        <Route path={"/"} element={<MainPage />}/>
-        <Route path={"/webchat"} element={<Webchat />}/>
-        <Route path={"/sing-up"} element={<SingUp />}/>
-      </Routes>
-    </BrowserRouter> 
-  );
+    const [username, setUsername] = useState("")
+
+    useEffect(()=> {
+        (
+            async () => {
+                const response = await fetch("http://localhost:8080/api/user", {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                });
+
+                const data = await response.json()
+                setUsername(data.username)
+            }
+        )();
+    });
+    return (
+        <BrowserRouter>
+            <PagesHeader setUsername={setUsername} username={username}/>
+            <Routes>
+                <Route path={"/"} element={<MainPage CurrentUsersName={username} />} />
+                <Route path={"/webchat"} element={<Webchat Username={username}/>}/>
+                <Route path={"/login"} element={<Login setUsername={setUsername}/>}/>
+                <Route path={"/register"} element={<Register />}/>
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
