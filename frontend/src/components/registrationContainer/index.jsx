@@ -1,5 +1,4 @@
-import {React, useState} from "react";
-import PagesHeader from '../pagesHeader/index';
+import React, {useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import "./index.css"
 
@@ -12,7 +11,7 @@ const RegistrationPageContainer = () => {
     const regNewUser = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:8080/api/register", {
+        await fetch("http://localhost:8080/api/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -21,8 +20,6 @@ const RegistrationPageContainer = () => {
                 password
             })
         });
-
-        const data = await response.json()
         navigate('/login');
         window.location.reload();
     }

@@ -1,5 +1,5 @@
 import {useNavigate} from 'react-router-dom';
-import React, {useEffect, useState} from "react";
+import React from "react";
 import "./index.css"
 
 
@@ -19,18 +19,18 @@ const PagesHeader = ({username,setUsername}) => {
     if (username === "" || typeof(username)==="undefined") {
         menu = (
             <nav>
-                <a href='/'>Main Page</a>
-                <a href='/login'>Login</a>
-                <a href='/register'>Register</a>
+                <a  href="/" onClick={()=>{navigate('/')}}>Main Page</a>
+                <a href="/login" onClick={()=>{navigate('/login')}}>Login</a>
+                <a href="/register" onClick={()=>{navigate('/register')}}>Register</a>
             </nav>
         )
     } else {
         menu = (
             <nav>
-                <a href='/webchat'>My Chat</a>
-                <a href='/'>Main Page</a>
-                <a onClick={()=>{logout()}}>Logout</a>
-                <a>User:{username}</a>
+                <a href="/webchat" onClick={()=>{navigate('/webchat')}}>My Chat</a>
+                <a href="/" onClick={()=>{navigate('/')}}>Main Page</a>
+                <a href="/" onClick={()=>{logout()}}>Logout</a>
+                <a href='/'>User:{username}</a>
             </nav>
         )
     }
@@ -41,17 +41,5 @@ const PagesHeader = ({username,setUsername}) => {
         </div>
     )
 };
-//
-// const checkUser = async () => {
-//     const response = await fetch("http://localhost:8080/api/user", {
-//         method: "GET",
-//         headers: {'Content-Type': 'application/json'},
-//         credentials: 'include',
-//     });
-//     const data = await response.json()
-//     if (data !== {"message":"unauthenticated"}) {
-//         setUsername(data.username)
-//     }
-// }
 
 export default PagesHeader;

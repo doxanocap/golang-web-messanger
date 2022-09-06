@@ -1,11 +1,9 @@
-import React, { Component, useState, useEffect } from "react";
-import PagesHeader from '../pagesHeader/index';
+import React, { useState, useEffect } from "react";
 import "./index.css";
 
 const socket = new WebSocket('ws://localhost:8080/api/websocket');
 
 const SingleChatContainer = ({Username}) => {
-  const [usersList, setUsersList] = useState();
   const [onlineUsersList, setOnlineUsersList] = useState();
   const [chatHistory, setChatHistory] = useState();
   const [input, setInput] = useState("");
@@ -16,7 +14,6 @@ const SingleChatContainer = ({Username}) => {
   socket.onopen = () => {
     console.log("Successfully Connected");
     ParsingChatHistory();
-    ParseAllUsers();
     ParseOnlineUsers();
   };
   socket.onclose = (event) => {
@@ -43,13 +40,6 @@ const SingleChatContainer = ({Username}) => {
     setChatHistory(myArrStr)
   }
 
-  const ParseAllUsers = async () => {
-    const response = await fetch("http://localhost:8080/api/all-users");
-    const data = await response.json();
-    const myArrStr = JSON.parse(data);
-    setUsersList(myArrStr);
-  }
-
   const ParseOnlineUsers = async () => {
     const response = await fetch("http://localhost:8080/api/online-users");
     const data = await response.json();
@@ -62,7 +52,7 @@ const SingleChatContainer = ({Username}) => {
       ParseOnlineUsers();
       console.log(onlineUsersList);
     }, 10000);  
-  },[])
+  })
 
   return (
       <div className="SingleChatContainer">
