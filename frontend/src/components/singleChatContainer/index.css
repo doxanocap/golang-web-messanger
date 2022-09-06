@@ -24,6 +24,19 @@
   background-color: #212529;
 }
 
+.SingleChatContainer h2 {
+  margin: 20px 0 0 0;
+  padding: 0;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  color: white;
+  margin-left: 20px;
+  height: 40px;
+  font-size: 40px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 .SingleChatContainer .chatHistory {
   display: flex;
   justify-content: baseline;

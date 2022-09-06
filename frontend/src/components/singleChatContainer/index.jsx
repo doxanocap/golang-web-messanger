@@ -57,18 +57,26 @@ const SingleChatContainer = ({Username}) => {
     setOnlineUsersList(myArrStr);
   }
 
+  useEffect(()=> {
+    window.setInterval(function(){
+      ParseOnlineUsers();
+      console.log(onlineUsersList);
+    }, 10000);  
+  },[])
+
   return (
       <div className="SingleChatContainer">
         <div className="left-panel">
-          {typeof(onlineUsersList) === "object" ?
+          <h2>Online Users: </h2>
+          {typeof(onlineUsersList) === "object" && onlineUsersList !== "undefined" && onlineUsersList !== null?
             onlineUsersList.map((item, i) => {
               return (
-                <div className="users-boxes">
-                  <p className="username" key={item.token}>{item.username}</p>
-                  <p className="message" key={item.token+item.username+item.id}>{item.email}</p>
+                <div key={item.token+item.id}  className="users-boxes">
+                  <p className="username" key={item.token + item.id}>{item.username}</p>
+                  <p className="message" key={item.token+item.username}>{item.email}</p>
                 </div>
               )
-              }) : <p>Nulllll</p>}
+              }) : (null)}
         </div>
         <div>
           <div className="chatHistory">
@@ -87,7 +95,7 @@ const SingleChatContainer = ({Username}) => {
                   } else {
                     return (
                       <li key={item.username+item.time+item.message}  className="left-sided">
-                        <div key={item.username+item.time+item.message} className="text-blocks">
+                        <div key={item.username+item.time} className="text-blocks">
                           <p className="username">{item.username}</p>
                           <p className="message">{item.message}</p>
                           <p className="time">{item.time.substr(12,5)}</p>

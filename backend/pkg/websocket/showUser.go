@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"fmt"
+
 	"github.com/doxanocap/golang-react/backend/pkg/controllers"
 	"github.com/doxanocap/golang-react/backend/pkg/database"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
@@ -20,7 +21,7 @@ func ShowCurrentUser(c *models.Client) models.User {
 		panic(err)
 	}
 	claims := token.Claims.(*jwt.RegisteredClaims)
-	var user models.User
+	user := models.User{0, "", "", "", []byte{}}
 	res, _ := database.DB.Query(fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", claims.Issuer))
 	for res.Next() {
 		err = res.Scan(&user.Id, &user.Token, &user.Username, &user.Email, &user.Password)

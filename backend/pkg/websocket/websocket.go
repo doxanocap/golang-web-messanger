@@ -2,12 +2,13 @@ package websocket
 
 import (
 	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/doxanocap/golang-react/backend/pkg/database"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"log"
-	"net/http"
 )
 
 var currentChatHistory []models.ChatHistory
@@ -76,7 +77,9 @@ func ListofOnlineUsers(ctx *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
-		data = append(data, Current)
+		if Current.Username != "" && Current.Email != "" && Current.Id != 0 {
+			data = append(data, Current)
+		}
 	}
 	dataJSON, _ := json.MarshalIndent(data, "", "\t")
 	ctx.JSON(http.StatusOK, string(dataJSON))

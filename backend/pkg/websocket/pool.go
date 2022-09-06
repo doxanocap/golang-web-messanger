@@ -18,7 +18,7 @@ func Start(pool *models.Pool) {
 				i++
 				break
 			}
-			if i == 0 {
+			if i == 0 && currUser.Id != 0 && currUser.Token != "" {
 				database.DB.Query(fmt.Sprintf("INSERT INTO onlineUsers (id, username, email) VALUES('%d','%s','%s')", currUser.Id, currUser.Username, currUser.Email))
 			}
 			pool.Clients[client] = true
