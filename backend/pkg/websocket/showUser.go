@@ -23,12 +23,14 @@ func ShowCurrentUser(c *models.Client) models.User {
 	claims := token.Claims.(*jwt.RegisteredClaims)
 	user := models.User{0, "", "", "", []byte{}}
 	res, _ := database.DB.Query(fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", claims.Issuer))
-	for res.Next() {
-		err = res.Scan(&user.Id, &user.Token, &user.Username, &user.Email, &user.Password)
-		if err != nil {
-			panic(err)
+	if res != nil {
+		for res.Next() {
+			err = res.Scan(&user.Id, &user.Token, &user.Username, &user.Email, &user.Password)
+			if err != nil {
+				panic(err)
+			}
+			break
 		}
-		break
 	}
 	return user
 }

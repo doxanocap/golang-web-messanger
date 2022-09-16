@@ -2,10 +2,13 @@ package routes
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/doxanocap/golang-react/backend/pkg/controllers"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
 	"github.com/doxanocap/golang-react/backend/pkg/websocket"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,20 +22,21 @@ func SetupRoutes() {
 		AllowCredentials: true,
 	}))
 	pool := models.NewPool()
-
+	r.Use(static.Serve("/", static.LocalFile("./web", true)))
 	go websocket.Start(pool)
 
-	r.GET("/api/all-users", websocket.ListofUsers)
-	r.GET("api/online-users", websocket.ListofOnlineUsers)
-	r.GET("/api/fetch", websocket.Sender)
-	r.GET("/api/user", controllers.User)
-	r.GET("/api/websocket", func(ctx *gin.Context) {
+	api := r.Group("/api")
+	api.GET("/all-users", websocket.ListofUsers)
+	api.GET("/online-users", websocket.ListofOnlineUsers)
+	api.GET("/fetch", websocket.Sender)
+	api.GET("/user", controllers.User)
+	api.GET("/websocket", func(ctx *gin.Context) {
 		serveWs(pool, ctx)
 	})
-	r.POST("/api/register", controllers.Register)
-	r.POST("/api/login", controllers.Login)
-	r.POST("/api/logout", controllers.Logout)
-
+	api.GET("/check", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"message": "Work pls!!"}) })
+	api.POST("/register", controllers.Register)
+	api.POST("/login", controllers.Login)
+	api.POST("/logout", controllers.Logout)
 	r.Run(":8080")
 
 }

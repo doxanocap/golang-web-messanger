@@ -4,8 +4,9 @@ import "./index.css";
 const socket = new WebSocket('ws://localhost:8080/api/websocket');
 
 const SingleChatContainer = ({Username}) => {
-  const [onlineUsersList, setOnlineUsersList] = useState();
-  const [chatHistory, setChatHistory] = useState();
+  const [allUsers, setAllUsers] = useState("")
+  const [onlineUsersList, setOnlineUsersList] = useState("");
+  const [chatHistory, setChatHistory] = useState("");
   const [input, setInput] = useState("");
   socket.onmessage = (msg) => {
     var currentTime = new Date().toLocaleString();
@@ -15,6 +16,7 @@ const SingleChatContainer = ({Username}) => {
     console.log("Successfully Connected");
     ParsingChatHistory();
     ParseOnlineUsers();
+    ParseAllUsers();
   };
   socket.onclose = (event) => {
     console.log("Socket Closed Connection: ", event);
@@ -47,13 +49,20 @@ const SingleChatContainer = ({Username}) => {
     setOnlineUsersList(myArrStr);
   }
 
+  const ParseAllUsers = async () => {
+    const response = await fetch("http://localhost:8080/api/all-users");
+    const data = await response.json();
+    const myArrStr = JSON.parse(data);
+    setAllUsers(myArrStr);
+  }
+
   useEffect(()=> {
     window.setInterval(function(){
       ParseOnlineUsers();
       console.log(onlineUsersList);
-    }, 10000);  
+    }, 100000);
   })
-
+  console.log(allUsers)
   return (
       <div className="SingleChatContainer">
         <div className="left-panel">
@@ -67,6 +76,17 @@ const SingleChatContainer = ({Username}) => {
                 </div>
               )
               }) : (null)}
+
+          <h2>All Users: </h2>
+          {typeof(allUsers) === "object" && allUsers !== "undefined" && allUsers !== null?
+              allUsers.map((item, i) => {
+                return (
+                    <div key={item.token+item.id}  className="users-boxes">
+                      <p className="username" key={item.token + item.id}>{item.username}</p>
+                      <p className="message" key={item.token+item.username}>{item.email}</p>
+                    </div>
+                )
+              }) : <p>eee</p>}
         </div>
         <div>
           <div className="chatHistory">
