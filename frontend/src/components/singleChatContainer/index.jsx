@@ -35,12 +35,12 @@ const SingleChatContainer = ({Username}) => {
     setInput(event.target.value)
   }
 
-  const ParsingChatHistory = async () => {
-    const response = await fetch("http://localhost:8080/api/fetch");
-    const data = await response.json();
-    const myArrStr = JSON.parse(data);
-    setChatHistory(myArrStr)
-  }
+    const ParsingChatHistory = async () => {
+      const response = await fetch("http://localhost:8080/api/fetch");
+      const data = await response.json();
+      const myArrStr = JSON.parse(data);
+      setChatHistory(myArrStr)
+    }
 
   const ParseOnlineUsers = async () => {
     const response = await fetch("http://localhost:8080/api/online-users");
