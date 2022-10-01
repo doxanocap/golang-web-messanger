@@ -28,7 +28,7 @@ const RegistrationPageContainer = () => {
         <div className="RegistrationPageContainer">
             <form onSubmit={regNewUser}>
                 <h2>Sign Up page</h2>
-                <input className="RegistrationPageContainer-input1" type={"username"} id={"inputUsername"} placeholder={"Username"} onChange={e => setUsername(e.target.value)} />
+                <input className="RegistrationPageContainer-input1" type={"username"} id={"inputUsername"} placeholder={"Your Name"} onChange={e => setUsername(e.target.value)} />
                 <input className="RegistrationPageContainer-input2" type={"email"} id={"inputEmail"} placeholder={"Email"} onChange={e => setEmail(e.target.value)} />
                 <input className="RegistrationPageContainer-input3" type={"password"} id={"inputPassword"} placeholder={"Password"} onChange={e => setPassword(e.target.value)} />
                 <button onClick={regNewUser}>Register</button>

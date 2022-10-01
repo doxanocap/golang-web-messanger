@@ -8,6 +8,7 @@ const SingleChatContainer = ({Username}) => {
   const [onlineUsersList, setOnlineUsersList] = useState("");
   const [chatHistory, setChatHistory] = useState("");
   const [input, setInput] = useState("");
+  
   socket.onmessage = (msg) => {
     var currentTime = new Date().toLocaleString();
     setChatHistory(chatHistory => [...chatHistory, {time: currentTime, username: JSON.parse(msg.data).username, message: JSON.parse(msg.data).message}])
@@ -86,7 +87,7 @@ const SingleChatContainer = ({Username}) => {
                       <p className="message" key={item.token+item.username}>{item.email}</p>
                     </div>
                 )
-              }) : <p>eee</p>}
+              }) : (null)}
         </div>
         <div>
           <div className="chatHistory">
