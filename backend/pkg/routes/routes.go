@@ -3,7 +3,6 @@ package routes
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/doxanocap/golang-react/backend/pkg/controllers"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
@@ -22,10 +21,6 @@ func SetupRoutes() {
 		ExposeHeaders:    []string{"Authorization"},
 		AllowCredentials: true,
 	}))
-	port, err := os.Getenv("PORT")
-	if err != nil {
-		panic(err)
-	}
 	pool := models.NewPool()
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
 	r.Use(static.Serve("/webchat", static.LocalFile("./web", true)))
@@ -45,7 +40,7 @@ func SetupRoutes() {
 	api.POST("/register", controllers.Register)
 	api.POST("/login", controllers.Login)
 	api.POST("/logout", controllers.Logout)
-	r.Run(":" + port)
+	r.Run(":8080")
 
 }
 
