@@ -23,8 +23,11 @@ func SetupRoutes() {
 	}))
 	pool := models.NewPool()
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
-	go websocket.Start(pool)
+	r.Use(static.Serve("/webchat", static.LocalFile("./web", true)))
+	r.Use(static.Serve("/login", static.LocalFile("./web", true)))
+	r.Use(static.Serve("/register", static.LocalFile("./web", true)))
 
+	go websocket.Start(pool)
 	api := r.Group("/api")
 	api.GET("/all-users", websocket.ListofUsers)
 	api.GET("/online-users", websocket.ListofOnlineUsers)
