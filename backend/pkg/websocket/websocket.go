@@ -33,7 +33,7 @@ func Sender(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-
+	defer res.Close()
 	currentChatHistory = []models.ChatHistory{}
 	for res.Next() {
 		var current models.ChatHistory
@@ -52,6 +52,7 @@ func ListofUsers(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+	defer res.Close()
 	var data []models.User
 	for res.Next() {
 		var Current models.User
@@ -70,6 +71,7 @@ func ListofOnlineUsers(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+	defer res.Close()
 	var data []models.User
 	for res.Next() {
 		var Current models.User

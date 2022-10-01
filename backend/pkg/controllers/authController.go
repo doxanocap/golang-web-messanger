@@ -2,15 +2,16 @@ package controllers
 
 import (
 	"fmt"
+	"math/rand"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/doxanocap/golang-react/backend/pkg/database"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
-	"math/rand"
-	"net/http"
-	"strconv"
-	"time"
 )
 
 const SecretKey = "secret"
@@ -30,10 +31,11 @@ func Register(ctx *gin.Context) {
 		Email:    data["email"],
 		Password: password,
 	}
-	_, err := database.DB.Query(fmt.Sprintf("INSERT INTO users (token, username, email, password) VALUES('%s','%s','%s','%s')", user.Token, user.Username, user.Email, user.Password))
+	res, err := database.DB.Query(fmt.Sprintf("INSERT INTO users (token, username, email, password) VALUES('%s','%s','%s','%s')", user.Token, user.Username, user.Email, user.Password))
 	if err != nil {
 		panic(err)
 	}
+	defer res.Close()
 
 	ctx.JSON(http.StatusOK, user)
 }
@@ -49,6 +51,7 @@ func Login(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+	defer res.Close()
 
 	var user models.User
 	for res.Next() {
@@ -67,7 +70,6 @@ func Login(ctx *gin.Context) {
 		Issuer:    strconv.Itoa(int(user.Id)),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // expires after 1 day
 	})
-
 	token, err := claims.SignedString([]byte(SecretKey))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "couldn't login"})
@@ -98,7 +100,11 @@ func User(ctx *gin.Context) {
 	claims := token.Claims.(*jwt.RegisteredClaims)
 
 	var user models.User
-	res, _ := database.DB.Query(fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", claims.Issuer))
+	res, err := database.DB.Query(fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", claims.Issuer))
+	if err != nil {
+		panic(err)
+	}
+	defer res.Close()
 	for res.Next() {
 		err = res.Scan(&user.Id, &user.Token, &user.Username, &user.Email, &user.Password)
 		if err != nil {
@@ -106,6 +112,7 @@ func User(ctx *gin.Context) {
 		}
 		break
 	}
+
 	ctx.JSON(http.StatusOK, user)
 }
 
