@@ -10,7 +10,7 @@ const LoginPageContainer = ({setUsername}) => {
 
     const loginUser = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:8080/api/login", {
+        const response = await fetch("http://localhost:3000/api/login", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
@@ -21,7 +21,7 @@ const LoginPageContainer = ({setUsername}) => {
         });
         const data = await response.json()
         navigate("/");
-        window.location.reload()
+        window.location.reload();
         setUsername(data.username);
     }
     return (

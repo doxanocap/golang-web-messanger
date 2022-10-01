@@ -7,7 +7,7 @@ const PagesHeader = ({username,setUsername}) => {
     let menu;
     const navigate = useNavigate();
     const logout = async () => {
-        await fetch("http://localhost:8080/api/logout", {
+        await fetch("http://localhost:3000/api/logout", {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

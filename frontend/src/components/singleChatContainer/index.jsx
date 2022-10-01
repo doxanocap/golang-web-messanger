@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-const socket = new WebSocket('ws://localhost:8080/api/websocket');
+const socket = new WebSocket('ws://localhost:3000/api/websocket');
 
 const SingleChatContainer = ({Username}) => {
   const [allUsers, setAllUsers] = useState("")
@@ -37,21 +37,21 @@ const SingleChatContainer = ({Username}) => {
   }
 
     const ParsingChatHistory = async () => {
-      const response = await fetch("http://localhost:8080/api/fetch");
+      const response = await fetch("http://localhost:3000/api/fetch");
       const data = await response.json();
       const myArrStr = JSON.parse(data);
       setChatHistory(myArrStr)
     }
 
   const ParseOnlineUsers = async () => {
-    const response = await fetch("http://localhost:8080/api/online-users");
+    const response = await fetch("http://localhost:3000/api/online-users");
     const data = await response.json();
     const myArrStr = JSON.parse(data);
     setOnlineUsersList(myArrStr);
   }
 
   const ParseAllUsers = async () => {
-    const response = await fetch("http://localhost:8080/api/all-users");
+    const response = await fetch("http://localhost:3000/api/all-users");
     const data = await response.json();
     const myArrStr = JSON.parse(data);
     setAllUsers(myArrStr);
@@ -60,10 +60,8 @@ const SingleChatContainer = ({Username}) => {
   useEffect(()=> {
     window.setInterval(function(){
       ParseOnlineUsers();
-      console.log(onlineUsersList);
     }, 100000);
   })
-  console.log(allUsers)
   return (
       <div className="SingleChatContainer">
         <div className="left-panel">
