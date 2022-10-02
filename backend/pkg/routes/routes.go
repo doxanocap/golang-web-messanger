@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/doxanocap/golang-react/backend/pkg/controllers"
 	"github.com/doxanocap/golang-react/backend/pkg/models"
@@ -40,7 +41,7 @@ func SetupRoutes() {
 	api.POST("/register", controllers.Register)
 	api.POST("/login", controllers.Login)
 	api.POST("/logout", controllers.Logout)
-	r.Run(":8080")
+	r.Run(":" + os.Getenv("PORT"))
 
 }
 
