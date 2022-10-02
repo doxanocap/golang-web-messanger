@@ -2,12 +2,13 @@ import {useNavigate} from 'react-router-dom';
 import React from "react";
 import "./index.css"
 
+const port = process.env.PORT || 3000;
 
 const PagesHeader = ({username,setUsername}) => {
     let menu;
     const navigate = useNavigate();
     const logout = async () => {
-        await fetch("http://localhost:3000/api/logout", {
+        await fetch("https://webchat-doxa.herokuapp.com/api/logout", {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

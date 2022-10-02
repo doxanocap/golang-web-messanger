@@ -14,9 +14,13 @@ import (
 )
 
 func SetupRoutes() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://localhost:" + port},
 		AllowMethods:     []string{"POST", "GET", "PATCH", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Accept-Encoding", "Authorization", "X-CSRF-Token"},
 		ExposeHeaders:    []string{"Authorization"},

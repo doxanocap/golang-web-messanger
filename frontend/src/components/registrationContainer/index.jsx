@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import "./index.css"
 
+
 const RegistrationPageContainer = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("")
@@ -11,7 +12,7 @@ const RegistrationPageContainer = () => {
     const regNewUser = async (e) => {
         e.preventDefault();
 
-        await fetch("http://localhost:3000/api/register", {
+        await fetch("https://webchat-doxa.herokuapp.com/api/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

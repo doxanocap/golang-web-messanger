@@ -12,7 +12,7 @@ const App = () => {
     useEffect(()=> {
         (
             async () => {
-                const response = await fetch("http://localhost:3000/api/user", {
+                const response = await fetch("https://webchat-doxa.herokuapp.com/api/user", {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include',
                 });
