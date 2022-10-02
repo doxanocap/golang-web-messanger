@@ -1,33 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-// const socket = new WebSocket("ws://webchat-doxa.herokuapp.com/api/websocket");
-
 const SingleChatContainer = ({Username}) => {
   const [allUsers, setAllUsers] = useState("")
   const [onlineUsersList, setOnlineUsersList] = useState("");
   const [chatHistory, setChatHistory] = useState("");
   const [input, setInput] = useState("");
-  
-  // socket.onmessage = (msg) => {
-  //   var currentTime = new Date().toLocaleString();
-  //   setChatHistory(chatHistory => [...chatHistory, {time: currentTime, username: JSON.parse(msg.data).username, message: JSON.parse(msg.data).message}])
-  // }
-  // socket.onopen = () => {
-  //   console.log("Successfully Connected");
-  //   ParsingChatHistory();
-  //   ParseOnlineUsers();
-  //   ParseAllUsers();
-  // };
-  // socket.onclose = (event) => {
-  //   console.log("Socket Closed Connection: ", event);
-  // };
-  // socket.onerror = (error) => {
-  //   console.log("Socket Error: ", error);
-  // };
 
   const sendMessage = () => {
-    //socket.send(input);
     setInput("")
     document.getElementById("mainInput").value = "";
   } 
