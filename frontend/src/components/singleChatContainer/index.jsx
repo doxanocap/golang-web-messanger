@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-const socket = new WebSocket("ws://https://webchat-doxa.herokuapp.com/api/websocket");
+const socket = new WebSocket("https://localhost:3000/api/websocket");
 
 const SingleChatContainer = ({Username}) => {
   const [allUsers, setAllUsers] = useState("")

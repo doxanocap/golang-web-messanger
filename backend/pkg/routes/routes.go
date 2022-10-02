@@ -20,7 +20,7 @@ func SetupRoutes() {
 	}
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:" + port},
+		AllowOrigins:     []string{"https://webchat-doxa.herokuapp.com/"},
 		AllowMethods:     []string{"POST", "GET", "PATCH", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Accept-Encoding", "Authorization", "X-CSRF-Token"},
 		ExposeHeaders:    []string{"Authorization"},
