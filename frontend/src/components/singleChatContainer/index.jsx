@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 
-const socket = new WebSocket("wss://webchat-doxa.herokuapp.com/api/websocket");
+const socket = new WebSocket("wss://webchat-doxa.herokuapp.com/api/websocket/");
 
 const SingleChatContainer = ({Username}) => {
   const [allUsers, setAllUsers] = useState("")
@@ -37,21 +37,21 @@ const SingleChatContainer = ({Username}) => {
   }
 
     const ParsingChatHistory = async () => {
-      const response = await fetch("https://webchat-doxa.herokuapp.com/api/fetch");
+      const response = await fetch("https://webchat-doxa.herokuapp.com/api/fetch/");
       const data = await response.json();
       const myArrStr = JSON.parse(data);
       setChatHistory(myArrStr)
     }
 
   const ParseOnlineUsers = async () => {
-    const response = await fetch("https://webchat-doxa.herokuapp.com/api/online-users");
+    const response = await fetch("https://webchat-doxa.herokuapp.com/api/online-users/");
     const data = await response.json();
     const myArrStr = JSON.parse(data);
     setOnlineUsersList(myArrStr);
   }
 
   const ParseAllUsers = async () => {
-    const response = await fetch("https://webchat-doxa.herokuapp.com/api/all-users");
+    const response = await fetch("https://webchat-doxa.herokuapp.com/api/all-users/");
     const data = await response.json();
     const myArrStr = JSON.parse(data);
     setAllUsers(myArrStr);

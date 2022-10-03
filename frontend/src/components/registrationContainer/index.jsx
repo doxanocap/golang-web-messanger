@@ -12,7 +12,7 @@ const RegistrationPageContainer = () => {
     const regNewUser = async (e) => {
         e.preventDefault();
 
-        await fetch("https://webchat-doxa.herokuapp.com/api/register", {
+        await fetch("https://webchat-doxa.herokuapp.com/api/register/", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
