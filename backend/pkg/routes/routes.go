@@ -20,7 +20,7 @@ func SetupRoutes() {
 	}
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://webchat-doxa.herokuapp.com/"},
+		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"POST", "GET", "PATCH", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Accept-Encoding", "Authorization", "X-CSRF-Token"},
 		ExposeHeaders:    []string{"Authorization"},
@@ -45,13 +45,13 @@ func SetupRoutes() {
 	api.POST("/register", controllers.Register)
 	api.POST("/login", controllers.Login)
 	api.POST("/logout", controllers.Logout)
-	r.Run(":" + os.Getenv("PORT"))
+	r.Run(":8080")
 
 }
 
 func serveWs(pool *models.Pool, ctx *gin.Context) {
 	fmt.Println("WebSocket Endpoint Hit")
-	conn, err := websocket.Upgrade(ctx, ctx.Request)
+	conn, err := websocket.Upgrade(ctx)
 	if err != nil {
 		fmt.Fprintf(ctx.Writer, "%+V\n", err)
 	}
