@@ -8,7 +8,7 @@ const PagesHeader = ({username,setUsername}) => {
     let menu;
     const navigate = useNavigate();
     const logout = async () => {
-        await fetch("https://webchat-doxa.herokuapp.com/api/logout/", {
+        const response = await fetch("https://webchat-doxa.herokuapp.com/api/logout", {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
         });
