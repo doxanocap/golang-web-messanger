@@ -45,7 +45,7 @@ func SetupRoutes() {
 	api.POST("/register", controllers.Register)
 	api.POST("/login", controllers.Login)
 	api.POST("/logout", controllers.Logout)
-	r.Run(":8080")
+	r.Run(":" + port)
 
 }
 
