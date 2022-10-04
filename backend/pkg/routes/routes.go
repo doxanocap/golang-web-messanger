@@ -38,13 +38,13 @@ func SetupRoutes() {
 	api.GET("/online-users", websocket.ListofOnlineUsers)
 	api.GET("/fetch", websocket.Sender)
 	api.GET("/user", controllers.User)
+	api.GET("/logout", controllers.Logout)
 	api.GET("/websocket", func(ctx *gin.Context) {
 		serveWs(pool, ctx)
 	})
 	api.GET("/check", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"message": "Work pls!!"}) })
 	api.POST("/register", controllers.Register)
 	api.POST("/login", controllers.Login)
-	api.POST("/logout", controllers.Logout)
 	r.Run(":" + port)
 
 }
