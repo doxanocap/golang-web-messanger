@@ -17,18 +17,18 @@ func Start(pool *models.Pool) {
 			if err != nil {
 				panic(err)
 			}
-			defer res.Close()
 			i := 0
 			for res.Next() {
 				i++
 				break
 			}
+			res.Close()
 			if i == 0 && currUser.Id != 0 && currUser.Token != "" {
 				res1, err1 := database.DB.Query(fmt.Sprintf("INSERT INTO onlineUsers (id, username, email) VALUES('%d','%s','%s')", currUser.Id, currUser.Username, currUser.Email))
 				if err1 != nil {
 					panic(err)
 				}
-				defer res1.Close()
+				res1.Close()
 			}
 			pool.Clients[client] = true
 		case client := <-pool.Unregister:
@@ -38,7 +38,7 @@ func Start(pool *models.Pool) {
 			if err != nil {
 				panic(err)
 			}
-			defer res.Close()
+			res.Close()
 		case message := <-pool.Broadcast:
 			fmt.Println("Sending message to all clients in Pool")
 			fmt.Println(message.Message)
@@ -46,7 +46,7 @@ func Start(pool *models.Pool) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			defer res.Close()
+			res.Close()
 			for client := range pool.Clients {
 				if err := client.Conn.WriteJSON(message); err != nil {
 					fmt.Println(err)

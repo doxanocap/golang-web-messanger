@@ -26,7 +26,6 @@ func ShowCurrentUser(c *models.Client) models.User {
 	if err != nil {
 		panic(err)
 	}
-	defer res.Close()
 	if res != nil {
 		for res.Next() {
 			err = res.Scan(&user.Id, &user.Token, &user.Username, &user.Email, &user.Password)
@@ -36,5 +35,6 @@ func ShowCurrentUser(c *models.Client) models.User {
 			break
 		}
 	}
+	res.Close()
 	return user
 }
